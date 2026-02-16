@@ -9,7 +9,7 @@ for user in "${newusers[@]}"; do
   echo "$user:$user" | chpasswd
 done
 
-for moduser in "${modusers[]@}"; do
+for moduser in "${modusers[@]}"; do
   usermod -aG sudo moduser
   echo "$moduser:$moduser" | chpasswd
 done
