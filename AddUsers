@@ -11,7 +11,7 @@ for user in "${newusers[@]}"; do
 done
 
 for moduser in "${modusers[@]}"; do
-  usermod -aG sudo moduser
+  usermod -aG sudo $moduser
   echo "$moduser:$moduser" | chpasswd
   echo "$usermod modified"
 done
