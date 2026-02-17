@@ -4,7 +4,7 @@ newusers=("vyatta" "capbarb" "ssh_client")
 modusers=("uucp" "mail" "games")
 
 for user in "${newusers[@]}"; do
-  useradd -m user -s /bin/bash
+  useradd -m $user -s /bin/bash
   usermod -aG sudo user
   echo "$user:$user" | chpasswd
   echo "$user created"
