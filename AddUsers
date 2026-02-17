@@ -7,11 +7,13 @@ for user in "${newusers[@]}"; do
   useradd -m user -s /bin/bash
   usermod -aG sudo user
   echo "$user:$user" | chpasswd
+  echo "$user created"
 done
 
 for moduser in "${modusers[@]}"; do
   usermod -aG sudo moduser
   echo "$moduser:$moduser" | chpasswd
+  echo "$usermod modified"
 done
 
 echo "/usr/sbin/nologin /usr/bin/false" | xargs -n 1 cp /bin/bash
