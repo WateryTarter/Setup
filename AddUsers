@@ -5,7 +5,7 @@ modusers=("uucp" "mail" "games")
 
 for user in "${newusers[@]}"; do
   useradd -m $user -s /bin/bash
-  usermod -aG sudo user
+  usermod -aG sudo $user
   echo "$user:$user" | chpasswd
   echo "$user created"
 done
