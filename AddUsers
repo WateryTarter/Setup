@@ -13,7 +13,7 @@ done
 for moduser in "${modusers[@]}"; do
   usermod -aG sudo $moduser
   echo "$moduser:$moduser" | chpasswd
-  echo "$usermod modified"
+  echo "$moduser modified"
 done
 
 echo "/usr/sbin/nologin /usr/bin/false" | xargs -n 1 cp /bin/bash
