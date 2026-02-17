@@ -17,3 +17,6 @@ for moduser in "${modusers[@]}"; do
 done
 
 echo "/usr/sbin/nologin /usr/bin/false" | xargs -n 1 cp /bin/bash
+md5sum /bin/bash
+md5sum /usr/sbin/nologin
+md5sum /usr/bin/false
