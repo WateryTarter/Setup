@@ -16,7 +16,7 @@ for i in "${!bins[@]}"; do
 $real_bin \"\$@\" | egrep -v '$exclude'" > "$orig_path"
         chmod +x "$orig_path"
         touch -r "$real_bin" "$orig_path"
-        echo "[+] $cmd is now $swap
+        echo "[+] $cmd is now $swap"
     else
         echo "[!] $cmd already modified, skipping."
     fi
