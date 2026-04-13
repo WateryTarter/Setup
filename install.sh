@@ -7,10 +7,10 @@ PATH="/tmp/install.sh"
 
 for target in "${IPs[@]}"; do
 	echo "--- Starting Deployment to $target ---"
-	ssh "$USER@$target" && "wget -q $URL -O $PATH && \
+	ssh "$USER@$target" "wget -q $URL -O $PATH && \
 		chmod +x $PATH && \
-		$PATH" 2> /tmp/remote_error.log
-	rm "$PATH"
+		./$PATH" 2> /tmp/remote_error.log && \
+		rm "$PATH"
 
 	if [ $? -ne 0 ]; then
 		echo "FAILED: Stopped at $target"
