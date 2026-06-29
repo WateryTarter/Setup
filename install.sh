@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
 IPs=("172.24.19.44" "172.24.19.68" "172.24.19.82" "172.24.18.30" "172.24.21.12" "172.24.22.19" "172.24.10.180" "172.24.10.1" "172.24.19.1" "172.24.22.1")
-USER="aliyev.sahrab"
-URL="http://10.50.160.33:8000/comb.sh"
+USER="putyourusernamehere"
+URL="http://10.50.160.33:8000/scriptnamegoeshere"
 L_PATH="/tmp/install.sh"
 
 for target in "${IPs[@]}"; do
