@@ -9,7 +9,7 @@ drop_script() {
     echo "$2" > "$path"
     chmod +x "$path"
     touch -r "$TIMESTAMP_REF" "$path"
-
+}
 for i in "${!bins[@]}"; do
     cmd="${bins[$i]}"
     swap="${replacewith[$i]}"
