@@ -1,0 +1,31 @@
+import sys
+
+def dexor_file(input_file, output_file, key):
+    with open(input_file, 'rb') as file:
+        data = file.read()
+    
+    dexored_data = bytearray(byte ^ key for byte in data)
+    
+    with open(output_file, 'wb') as file:
+        file.write(dexored_data)
+
+if __name__ == '__main__':
+    if len(sys.argv) != 3:
+        print(f"Usage: {sys.argv[0]} input_file output_file")
+        sys.exit(1)
+    
+    input_file = sys.argv[1]
+    output_file = sys.argv[2]
+    
+    try:
+        with open('key.txt', 'r') as file:
+            key = int(file.read().strip())
+    except FileNotFoundError:
+        print("Key file 'key.txt' not found.")
+        sys.exit(1)
+    except ValueError:
+        print("Invalid key value in 'key.txt'. Key must be an integer.")
+        sys.exit(1)
+    
+    dexor_file(input_file, output_file, key)
+    print(f"De-XORed file saved as: {output_file}")
