@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+
+read -p "Enter Servicename (omit .service, e.g. 'rsc'): " servicename
+read -p "Enter Description: " description
+read -p "Enter payload location: " payload
+
+cat <<EOL | sudo tee /etc/systemd/system/${servicename}.service > /dev/null
+[Unit]
+Description=${descrption}
+After=network.target
+StartLimitBurst=1000
+StartLimitIntervalSec=0
+
+[Service]
+Type=simple
+Restart=always
+RestartSec=1
+User=root
+ExecStart=${payload}
+
+[Install]
+WantedBy=multi-user.target
+EOL
+
+sudo systemctl start ${servicename} && sudo systemctl enable ${servicename}
+
+echo "Service file created and currently running: /etc/systemd/system/${servicename}.service"
